@@ -2,13 +2,11 @@
   "name": "web-app-master",
   "version": "1.0.0",
   "private": true,
-  "description": "Wave 2 SoSoValue and SoDEX real-data web app for Netlify",
+  "type": "module",
   "scripts": {
-    "build": "echo "Static Netlify build ready"",
-    "start": "netlify dev"
+    "build": "node -e \"const fs=require('fs'); fs.rmSync('dist',{recursive:true,force:true}); fs.mkdirSync('dist'); ['index.html','script.js','style.css'].forEach(f=>fs.existsSync(f)&&fs.copyFileSync(f,'dist/'+f));\""
   },
   "dependencies": {
-    "ethers": "^6.15.0"
-  },
-  "devDependencies": {}
+    "ethers": "^6.13.5"
+  }
 }
