@@ -1,0 +1,14 @@
+{
+  "name": "web-app-master",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Wave 2 SoSoValue and SoDEX real-data web app for Netlify",
+  "scripts": {
+    "build": "echo "Static Netlify build ready"",
+    "start": "netlify dev"
+  },
+  "dependencies": {
+    "ethers": "^6.15.0"
+  },
+  "devDependencies": {}
+}

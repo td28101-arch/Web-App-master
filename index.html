@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Web-App | Wave 2</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="hero">
+    <nav class="nav">
+      <div class="brand">
+        <span class="brand-mark">W</span>
+        <div>
+          <strong>Web-App</strong>
+          <small>Live Data × Trading × ValueChain</small>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="#market">Market</a>
+        <a href="#index">SSI Index</a>
+        <a href="#news">News</a>
+        <a href="#trade">Trading</a>
+      </div>
+    </nav>
+
+    <section class="hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Wave 2 Builder Tool</p>
+        <h1>Build your one-person on-chain finance business.</h1>
+        <p class="lead">A real-data web app powered by live market APIs, SSI index signals, and secure trading endpoints. Keys stay server-side in Netlify environment variables.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#market">Load live data</a>
+          <a class="btn ghost" href="#trade">Open trading panel</a>
+        </div>
+      </div>
+      <div class="status-card">
+        <span class="status-dot" id="api-dot"></span>
+        <h2 id="api-status">Connecting to live APIs…</h2>
+        <p id="api-message">No demo data is bundled. If data fails, check Netlify environment variables.</p>
+        <div class="mini-stats">
+          <div><strong id="index-count">--</strong><span>SSI indices</span></div>
+          <div><strong id="news-count">--</strong><span>live news</span></div>
+          <div><strong id="etf-count">--</strong><span>ETF rows</span></div>
+        </div>
+      </div>
+    </section>
+  </header>
+
+  <main>
+    <section id="market" class="section">
+      <div class="section-head">
+        <p class="eyebrow">Live Market API</p>
+        <h2>Market intelligence dashboard</h2>
+        <button id="refresh-btn" class="btn small">Refresh</button>
+      </div>
+      <div id="market-grid" class="cards-grid"></div>
+    </section>
+
+    <section id="index" class="section two-col">
+      <div>
+        <div class="section-head compact">
+          <p class="eyebrow">SSI / Index Builder</p>
+          <h2>Index opportunities</h2>
+        </div>
+        <div id="indices-list" class="list-panel"></div>
+      </div>
+      <div>
+        <div class="section-head compact">
+          <p class="eyebrow">ETF Flow</p>
+          <h2>ETF live rows</h2>
+        </div>
+        <div id="etf-list" class="list-panel"></div>
+      </div>
+    </section>
+
+    <section id="news" class="section">
+      <div class="section-head">
+        <p class="eyebrow">Real-time Feeds</p>
+        <h2>Crypto news signals</h2>
+      </div>
+      <div id="news-list" class="news-grid"></div>
+    </section>
+
+    <section id="trade" class="section trade-section">
+      <div class="section-head">
+        <p class="eyebrow">Trading API</p>
+        <h2>Live account + order panel</h2>
+      </div>
+      <div class="trade-grid">
+        <form id="account-form" class="panel">
+          <h3>Account state</h3>
+          <label>Wallet address</label>
+          <input id="wallet-address" placeholder="0x..." autocomplete="off" />
+          <button class="btn primary" type="submit">Fetch account</button>
+          <pre id="account-output">Waiting for wallet address…</pre>
+        </form>
+
+        <form id="order-form" class="panel">
+          <h3>Place signed order</h3>
+          <label>Market</label>
+          <select id="market-type">
+            <option value="perps">Perps</option>
+            <option value="spot">Spot</option>
+          </select>
+          <label>Symbol ID</label>
+          <input id="symbol-id" type="number" min="1" placeholder="1" />
+          <label>Side</label>
+          <select id="order-side">
+            <option value="1">Buy</option>
+            <option value="2">Sell</option>
+          </select>
+          <label>Quantity</label>
+          <input id="quantity" placeholder="0.001" />
+          <label>Limit price (optional)</label>
+          <input id="price" placeholder="leave empty for market" />
+          <button class="btn danger" type="submit">Submit real order</button>
+          <pre id="order-output">Requires trading API key name, private key and account ID in Netlify.</pre>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Built for Wave 2: live data, news feeds, index tools, trading APIs and ValueChain.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

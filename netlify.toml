@@ -1,0 +1,22 @@
+[build]
+  command = "npm run build"
+  publish = "."
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/api/sosovalue"
+  to = "/.netlify/functions/sosovalue"
+  status = 200
+
+[[redirects]]
+  from = "/api/sodex-account"
+  to = "/.netlify/functions/sodex-account"
+  status = 200
+
+[[redirects]]
+  from = "/api/sodex-order"
+  to = "/.netlify/functions/sodex-order"
+  status = 200
