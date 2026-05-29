@@ -71,13 +71,11 @@ exports.handler = async (event) => {
 
     if (!apiKeyName || !privateKey) {
       return response(500, {
-        error:
-          'Missing SODEX_API_KEY_NAME or SODEX_API_PRIVATE_KEY in Netlify environment variables',
+        error: 'Missing SODEX_API_KEY_NAME or SODEX_API_PRIVATE_KEY in Netlify environment variables',
       });
     }
 
     const body = parseBody(event);
-
     const market = body.market === 'spot' ? 'spot' : 'perps';
     const network = process.env.SODEX_NETWORK || 'mainnet';
 
@@ -85,48 +83,34 @@ exports.handler = async (event) => {
     const chainId = Number(process.env.SODEX_CHAIN_ID || ENDPOINTS[network]?.chainId);
 
     if (!base || !chainId) {
-      return response(500, {
-        error: 'Invalid SoDEX endpoint configuration',
-      });
+      return response(500, { error: 'Invalid SoDEX endpoint configuration' });
     }
 
     const symbolID = Number(body.symbolID);
     const side = Number(body.side);
     const quantity = String(body.quantity || '').trim();
-    const accountIDRaw = String(process.env.SODEX_ACCOUNT_ID || '').trim();
 
     if (!symbolID || ![1, 2].includes(side) || !quantity) {
-      return response(400, {
-        error: 'symbolID, side and quantity are required',
-      });
+      return response(400, { error: 'symbolID, side and quantity are required' });
     }
 
     const params = {
       symbolID,
-      orders: [
-        orderedOrder({
-          side,
-          quantity,
-          price: body.price,
-        }),
-      ],
+      orders: [orderedOrder({ side, quantity, price: body.price })],
     };
 
-    // SODEX_ACCOUNT_ID is optional.
-    // If it is empty, SoDEX should use the primary/default account.
+    // SODEX_ACCOUNT_ID is optional. Leave it empty when SoDEX should use the primary/default account.
+    const accountIDRaw = String(process.env.SODEX_ACCOUNT_ID || '').trim();
     if (accountIDRaw) {
-      params.accountID = Number(accountIDRaw);
+      const accountID = Number(accountIDRaw);
+      if (!Number.isFinite(accountID)) {
+        return response(500, { error: 'SODEX_ACCOUNT_ID must be a number when provided' });
+      }
+      params.accountID = accountID;
     }
 
-    const signingPayload = {
-      type: 'newOrder',
-      params,
-    };
-
-    const payloadHash = ethers.keccak256(
-      ethers.toUtf8Bytes(JSON.stringify(signingPayload))
-    );
-
+    const signingPayload = { type: 'newOrder', params };
+    const payloadHash = ethers.keccak256(ethers.toUtf8Bytes(JSON.stringify(signingPayload)));
     const nonce = Date.now();
 
     const domain = {
@@ -144,12 +128,7 @@ exports.handler = async (event) => {
     };
 
     const wallet = new ethers.Wallet(privateKey);
-
-    const signature = await wallet.signTypedData(domain, types, {
-      payloadHash,
-      nonce,
-    });
-
+    const signature = await wallet.signTypedData(domain, types, { payloadHash, nonce });
     const typedSignature = `0x01${signature.slice(2)}`;
 
     const upstream = await fetch(`${base}/trade/orders`, {
@@ -165,7 +144,6 @@ exports.handler = async (event) => {
     });
 
     const text = await upstream.text();
-
     return response(upstream.status, text, {
       'content-type': upstream.headers.get('content-type') || 'application/json',
     });
